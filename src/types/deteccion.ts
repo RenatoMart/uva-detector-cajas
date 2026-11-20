@@ -29,6 +29,8 @@ export interface RespuestaDetector {
 	modo?: string;
 	/** false = imagen fuera del conjunto de ejemplos (solo en modo simulado). */
 	conocida?: boolean;
+	/** 'incompleto' = el contenido se sale del recuadro de la etiqueta. */
+	marco?: 'completo' | 'incompleto';
 }
 
 /** Cara de la caja que se está revisando. */

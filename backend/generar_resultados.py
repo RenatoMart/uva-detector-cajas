@@ -16,6 +16,9 @@ from PIL import Image
 
 from main import analizar
 
+# Etiquetas mal impresas (el contenido se sale del recuadro): la simulación las marca así.
+MARCO_INCOMPLETO = {'05_mala_real_cortada_abajo.jpg', '06_mala_real_cortada_derecha.jpg'}
+
 RAIZ = Path(__file__).resolve().parent.parent
 SALIDA = RAIZ / 'src' / 'lib' / 'resultados-simulacion.json'
 
@@ -27,6 +30,8 @@ for ruta in sorted((RAIZ / 'public' / 'prueba').glob('*.jpg')):
         'archivo': ruta.name,
         **analizar(Image.open(io.BytesIO(datos)).convert('RGB')),
     }
+    if ruta.name in MARCO_INCOMPLETO:
+        resultados[huella]['marco'] = 'incompleto'
     print(ruta.name, [c['tipo'] for c in resultados[huella]['codigos']])
 
 SALIDA.write_text(json.dumps(resultados, ensure_ascii=False, indent=1), encoding='utf-8')

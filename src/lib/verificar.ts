@@ -24,6 +24,7 @@ export interface ResultadoVerificacion {
 /** Identifica la cara por los códigos que se leen en la imagen. */
 export function detectarCara(respuesta: RespuestaDetector): Cara | null {
 	const { codigos } = respuesta;
+	if (respuesta.marco) return 'principal';
 	if (codigos.some(c => c.tipo === 'codigo_caja')) return 'principal';
 	if (codigos.some(c => c.tipo === 'qr_personal' || c.tipo === 'qr_peso')) {
 		return 'costado';
@@ -122,6 +123,10 @@ export function verificarCara(
 		],
 		info: [],
 	});
+
+	if (respuesta.marco === 'incompleto') {
+		return resultado(['El contenido se sale del recuadro de la etiqueta'], []);
+	}
 
 	if (cara === null) {
 		return sinCodigos('Códigos ilegibles: no se pudo identificar la cara');

@@ -16,14 +16,16 @@ type Opcion = { archivo: string; peso: number };
 
 /**
  * Imágenes que "pasan" por la cámara. Los pesos hacen que ~10 % de las cajas salga mal,
- * parecido al reproceso del informe (9,6 %). No incluye las etiquetas con el
- * marco cortado, que el sistema aún no detecta.
+ * parecido al reproceso del informe (9,6 %). Incluye etiquetas mal impresas (marco
+ * incompleto).
  */
 const PRINCIPALES: Opcion[] = [
-	{ archivo: '01_principal_real_1.jpg', peso: 47 },
-	{ archivo: '02_principal_real_2.jpg', peso: 48 },
+	{ archivo: '01_principal_real_1.jpg', peso: 46 },
+	{ archivo: '02_principal_real_2.jpg', peso: 46 },
 	{ archivo: '03_principal_borrosa.jpg', peso: 3 },
 	{ archivo: '04_sin_etiqueta.jpg', peso: 2 },
+	{ archivo: '05_mala_real_cortada_abajo.jpg', peso: 2 },
+	{ archivo: '06_mala_real_cortada_derecha.jpg', peso: 1 },
 ];
 
 const COSTADOS: Opcion[] = [

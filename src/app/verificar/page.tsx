@@ -66,10 +66,10 @@ const EJEMPLOS_MALOS: Ejemplo[] = [
 		archivo: '13_costado_trabajador_repetido.jpg',
 		nombre: 'Trabajador repetido',
 	},
-	{ archivo: '05_mala_real_cortada_abajo.jpg', nombre: 'Mal impresa: abajo*' },
+	{ archivo: '05_mala_real_cortada_abajo.jpg', nombre: 'Mal impresa: abajo' },
 	{
 		archivo: '06_mala_real_cortada_derecha.jpg',
-		nombre: 'Mal impresa: derecha*',
+		nombre: 'Mal impresa: derecha',
 	},
 ];
 
@@ -112,13 +112,6 @@ const AYUDA_MANUAL = (
 	<p className='text-sm text-stone-700'>
 		Elija de dónde viene la imagen y pulse <strong>Verificar</strong>. El
 		sistema reconoce solo si es la etiqueta principal o el costado.
-	</p>
-);
-
-const NOTA_EJEMPLOS = (
-	<p className='mt-2 text-xs text-stone-600'>
-		* Etiquetas reales con el contenido cortado: el sistema aún no las detecta
-		bien.
 	</p>
 );
 
@@ -548,7 +541,6 @@ export default function Home() {
 													</button>
 												))}
 											</div>
-											{NOTA_EJEMPLOS}
 										</div>
 									</div>
 								)}

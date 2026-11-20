@@ -6,6 +6,7 @@ type Guardado = {
 	archivo: string;
 	codigos: CodigoLeido[];
 	etiqueta: RespuestaDetector['etiqueta'];
+	marco?: RespuestaDetector['marco'];
 };
 const GUARDADOS = resultados as unknown as Record<string, Guardado>;
 
@@ -27,5 +28,6 @@ export function leerImagen(bytes: Buffer): RespuestaDetector {
 		ms,
 		modo: MODO,
 		conocida: Boolean(guardado),
+		marco: guardado?.marco,
 	};
 }
