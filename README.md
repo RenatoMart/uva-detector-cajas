@@ -1,3 +1,8 @@
+El detector está **integrado en la propia app de Next** (rutas `/api/detectar` y
+`/api/salud`), así que no hace falta ningún servidor aparte y se despliega tal cual en
+**Vercel**. Reconoce las imágenes de ejemplo por su huella (SHA-256) y devuelve
+resultados precalculados con el lector real (`src/lib/resultados-simulacion.json`).
+
 # Verificación de etiquetas · El Pedregal
 
 Web para detectar y verificar etiquetas de cajas de uva en la línea Packing 1. Usa la cámara
