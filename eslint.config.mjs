@@ -53,7 +53,14 @@ const eslintConfig = defineConfig([
 			'import/no-unresolved': 'error',
 		},
 	},
-	globalIgnores(['.next/**', 'out/**', 'build/**', 'dist/**', 'next-env.d.ts']),
+	globalIgnores([
+		'backend/**',
+		'.next/**',
+		'out/**',
+		'build/**',
+		'dist/**',
+		'next-env.d.ts',
+	]),
 ]);
 
 export default eslintConfig;
