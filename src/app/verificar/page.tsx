@@ -24,6 +24,7 @@ import { cn } from '@/lib/clases';
 import {
 	detectar,
 	detectorConfigurado,
+	detectorRemoto,
 	servicioDisponible,
 } from '@/lib/detector';
 import { PEDIDOS } from '@/lib/pedidos';
@@ -53,6 +54,18 @@ const EJEMPLOS_MALOS: Ejemplo[] = [
 	{ archivo: '03_principal_borrosa.jpg', nombre: 'Principal borrosa' },
 	{ archivo: '10_costado_borroso.jpg', nombre: 'Costado borroso' },
 	{ archivo: '04_sin_etiqueta.jpg', nombre: 'Sin etiqueta' },
+	{
+		archivo: '11_costado_peso_incorrecto.jpg',
+		nombre: 'QR de peso incorrecto',
+	},
+	{
+		archivo: '12_costado_trabajador_no_registrado.jpg',
+		nombre: 'Trabajador no registrado',
+	},
+	{
+		archivo: '13_costado_trabajador_repetido.jpg',
+		nombre: 'Trabajador repetido',
+	},
 	{ archivo: '05_mala_real_cortada_abajo.jpg', nombre: 'Mal impresa: abajo*' },
 	{
 		archivo: '06_mala_real_cortada_derecha.jpg',
@@ -85,6 +98,13 @@ const AYUDA_SIMULACION = (
 		<strong>etiqueta principal</strong> y luego el{' '}
 		<strong>costado con los QR</strong>; el sistema reconoce solo cuál es cada
 		una.
+	</p>
+);
+
+const NOTA_CAMARA = (
+	<p className='rounded-lg bg-amber-50 p-3 text-sm text-amber-900'>
+		En esta versión simulada la cámara no lee códigos reales: use las imágenes
+		de ejemplo.
 	</p>
 );
 
@@ -173,6 +193,7 @@ export default function Home() {
 				elegida === 'auto' ? detectarCara(respuesta) : elegida;
 			const r = verificarCara(identificada, respuesta, historialRef.current, {
 				ignorarRepetidos,
+				pesoPedidoKg: pedido.pesoKg,
 			});
 			contador.current += 1;
 			const v: Verificacion = {
@@ -187,7 +208,7 @@ export default function Home() {
 			setHistorial(historialRef.current);
 			return v;
 		},
-		[pedido.id],
+		[pedido.id, pedido.pesoKg],
 	);
 
 	const sim = useSimulacion({
@@ -336,7 +357,7 @@ export default function Home() {
 						{servicio === undefined
 							? 'Conectando…'
 							: conectado
-								? `Detector conectado · modo ${servicio}`
+								? `Detector ${detectorRemoto ? 'conectado' : 'integrado'} · modo ${servicio}`
 								: 'Detector sin conexión'}
 					</p>
 				</div>
@@ -426,6 +447,7 @@ export default function Home() {
 									valor={fuente}
 									onCambiar={cambiarFuente}
 								/>
+								{fuente === 'camara' && !detectorRemoto && NOTA_CAMARA}
 
 								<div className='flex flex-wrap items-center gap-3'>
 									{fuente === 'camara' ? (

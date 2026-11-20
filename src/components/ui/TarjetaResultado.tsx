@@ -59,6 +59,20 @@ export function TarjetaResultado({ ultima }: { ultima: Verificacion | null }) {
 				</ul>
 			)}
 
+			{ultima.info.length > 0 && (
+				<div className='mt-3 rounded-lg bg-white/70 p-3 text-sm'>
+					<p className='font-semibold'>Lo que dicen los códigos</p>
+					<dl className='mt-1 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5'>
+						{ultima.info.map((d, i) => (
+							<div key={i} className='contents'>
+								<dt className='opacity-80'>{d.etiqueta}</dt>
+								<dd className='font-medium'>{d.valor}</dd>
+							</div>
+						))}
+					</dl>
+				</div>
+			)}
+
 			{ultima.codigos.length > 0 && (
 				<details className='mt-3 text-sm'>
 					<summary className='cursor-pointer font-medium underline-offset-2 hover:underline'>

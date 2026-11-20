@@ -27,6 +27,8 @@ export interface RespuestaDetector {
 	ms: number;
 	/** 'simulado' mientras no haya un modelo YOLO entrenado. */
 	modo?: string;
+	/** false = imagen fuera del conjunto de ejemplos (solo en modo simulado). */
+	conocida?: boolean;
 }
 
 /** Cara de la caja que se está revisando. */

@@ -109,9 +109,17 @@ export function verificarCara(
 	opciones: Opciones = {},
 ): ResultadoVerificacion {
 	const { codigos, etiqueta } = respuesta;
+	const fuera =
+		'Imagen fuera de la simulación: solo se reconocen las imágenes de ejemplo';
 	const sinCodigos = (m: string): ResultadoVerificacion => ({
 		veredicto: 'sin_lectura',
-		motivos: [etiqueta || codigos.length ? m : 'No se detectó etiqueta'],
+		motivos: [
+			respuesta.conocida === false
+				? fuera
+				: etiqueta || codigos.length
+					? m
+					: 'No se detectó etiqueta',
+		],
 		info: [],
 	});
 

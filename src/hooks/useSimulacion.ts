@@ -27,10 +27,13 @@ const PRINCIPALES: Opcion[] = [
 ];
 
 const COSTADOS: Opcion[] = [
-	{ archivo: '07_costado_real.jpg', peso: 95 },
+	{ archivo: '07_costado_real.jpg', peso: 92 },
 	{ archivo: '08_costado_falta_qr_personal.jpg', peso: 2 },
 	{ archivo: '09_costado_falta_qr_peso.jpg', peso: 2 },
 	{ archivo: '10_costado_borroso.jpg', peso: 1 },
+	{ archivo: '11_costado_peso_incorrecto.jpg', peso: 1 },
+	{ archivo: '12_costado_trabajador_no_registrado.jpg', peso: 1 },
+	{ archivo: '13_costado_trabajador_repetido.jpg', peso: 1 },
 ];
 
 const ESPERA = { llegada: 700, escaneo: 900, resultado: 1400, caja: 1800 };
