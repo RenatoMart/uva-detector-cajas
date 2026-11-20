@@ -8,7 +8,7 @@ interface Props {
 
 export function SelectorPedido({ pedidos, pedido, onCambiar }: Props) {
 	return (
-		<section className='rounded-xl border border-stone-200 bg-white p-4'>
+		<section className='rounded-2xl border border-stone-200 bg-white p-4 shadow-sm'>
 			<label className='text-sm font-semibold text-stone-900' htmlFor='pedido'>
 				Pedido que se está empacando
 			</label>

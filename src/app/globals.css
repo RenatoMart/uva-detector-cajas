@@ -88,3 +88,30 @@ body {
 .boton-iniciar:active {
 	transform: scale(0.97);
 }
+
+/* Detalles del navegador con los colores del proyecto. */
+::selection {
+	background: var(--amarillo);
+	color: var(--tinta);
+}
+
+html {
+	scrollbar-color: var(--color-stone-400) transparent;
+}
+
+.aparece {
+	animation: aparece 280ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes aparece {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.aparece {
+		animation: none;
+	}
+}

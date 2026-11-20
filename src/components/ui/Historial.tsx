@@ -10,7 +10,7 @@ function detalle(v: Verificacion): string {
 
 export function Historial({ historial }: { historial: Verificacion[] }) {
 	return (
-		<section className='overflow-hidden rounded-xl border border-stone-200 bg-white'>
+		<section className='overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm'>
 			<div className='border-b border-stone-200 px-4 py-3'>
 				<h2 className='text-base font-semibold text-stone-900'>
 					Últimas revisiones

@@ -89,6 +89,7 @@ const BOTON_PRINCIPAL = cn(
 	BOTON,
 	'bg-pedregal text-white hover:brightness-110',
 );
+const TARJETA = 'rounded-2xl border border-stone-200 bg-white shadow-sm';
 const CHIP =
 	'min-h-11 cursor-pointer rounded-full border px-4 text-sm disabled:opacity-50';
 
@@ -327,10 +328,10 @@ export default function Home() {
 							/>
 						</Link>
 						<div>
-							<h1 className='text-xl font-bold tracking-tight'>
+							<h1 className='text-base font-bold tracking-tight sm:text-xl'>
 								Verificación de etiquetas de caja
 							</h1>
-							<p className='text-sm opacity-95'>
+							<p className='text-xs opacity-95 sm:text-sm'>
 								El Pedregal · Packing 1 – Trujillo · uva de mesa
 							</p>
 						</div>
@@ -356,8 +357,8 @@ export default function Home() {
 				</div>
 			</header>
 
-			<main className='mx-auto grid max-w-7xl gap-5 p-4 sm:p-6 lg:grid-cols-[1fr_380px]'>
-				<div className='space-y-4'>
+			<main className='mx-auto grid max-w-7xl items-start gap-4 p-3 sm:gap-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_23.5rem]'>
+				<div className='space-y-4 lg:col-start-1 lg:row-start-1'>
 					{servicio === null && (
 						<div
 							className='rounded-xl border-2 border-red-700 bg-red-50 p-4 text-sm text-red-950'
@@ -375,7 +376,7 @@ export default function Home() {
 						</div>
 					)}
 
-					<section className='rounded-xl border border-stone-200 bg-white p-4 sm:p-5'>
+					<section className={cn(TARJETA, 'p-4 sm:p-5')}>
 						<Alternador
 							deshabilitado={sim.activa}
 							etiqueta='Modo de uso'
@@ -586,129 +587,122 @@ export default function Home() {
 							</p>
 						)}
 					</section>
-
-					<section
-						aria-label='Visor'
-						className='rounded-xl border border-stone-200 bg-white p-4'
-					>
-						<div
-							ref={contenedorRef}
-							className='relative flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-stone-900'
-						>
-							{!enSimulacion && fuente === 'camara' ? (
-								<video
-									ref={videoRef}
-									aria-label='Vista de la cámara'
-									className='size-full object-contain'
-									muted
-									playsInline
-									onLoadedMetadata={e =>
-										fijarImagen({
-											w: e.currentTarget.videoWidth,
-											h: e.currentTarget.videoHeight,
-										})
-									}
-								/>
-							) : imagenUrl ? (
-								// eslint-disable-next-line @next/next/no-img-element
-								<img
-									alt={imagenNombre || 'Etiqueta de la caja a verificar'}
-									className='size-full object-contain'
-									src={imagenUrl}
-									onLoad={e =>
-										fijarImagen({
-											w: e.currentTarget.naturalWidth,
-											h: e.currentTarget.naturalHeight,
-										})
-									}
-								/>
-							) : null}
-
-							{!enSimulacion && fuente === 'camara' && estado !== 'activa' && (
-								<p className='absolute px-4 text-center text-sm text-stone-200'>
-									{error ?? 'La cámara está apagada. Pulse “Encender cámara”.'}
-								</p>
-							)}
-							{!imagenUrl && (enSimulacion || fuente === 'imagen') && (
-								<p className='absolute px-4 text-center text-sm text-stone-200'>
-									{enSimulacion
-										? 'Pulse “Iniciar simulación” para ver pasar las cajas.'
-										: 'Elija una imagen o un ejemplo para empezar.'}
-								</p>
-							)}
-
-							{mostrarRecuadros && (
-								<Superposicion
-									area={area}
-									codigos={ultima?.codigos ?? []}
-									veredicto={ultima?.veredicto ?? null}
-								/>
-							)}
-
-							{sim.activa && sim.fase === 'escaneando' && (
-								<div
-									aria-hidden='true'
-									className='escaneo pointer-events-none absolute inset-0'
-								/>
-							)}
-
-							{sim.activa && (
-								<p className='absolute top-3 left-3 rounded-full bg-stone-900/90 px-3 py-1 text-xs font-semibold text-white'>
-									Caja n.º {sim.numero} ·{' '}
-									{sim.paso === 1 ? 'Etiqueta principal' : 'Costado (QR)'}
-								</p>
-							)}
-
-							{sim.activa && sim.fase !== 'resultado' && (
-								<p className='absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-stone-900/90 px-4 py-1.5 text-sm text-white'>
-									{sim.fase === 'llegando' ? 'Llega la caja…' : 'Revisando…'}
-								</p>
-							)}
-
-							{sim.activa &&
-								sim.fase === 'resultado' &&
-								badge &&
-								!cajaFinal && (
-									<p
-										className={cn(
-											'absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-xl px-5 py-2 text-xl font-black text-white shadow-lg',
-											badge.solido,
-										)}
-									>
-										{ultima && <badge.Icono className='size-6' />}
-										{badge.titulo}
-									</p>
-								)}
-
-							{badgeCaja && (
-								<div className='absolute inset-0 flex items-center justify-center bg-stone-900/65'>
-									<div
-										className={cn(
-											'rounded-2xl px-8 py-5 text-center text-white shadow-2xl',
-											badgeCaja.solido,
-										)}
-									>
-										<p className='text-sm font-semibold'>
-											Caja n.º {sim.numero}
-										</p>
-										<p className='flex items-center justify-center gap-2 text-3xl font-black'>
-											<badgeCaja.Icono className='size-8' />
-											{badgeCaja.titulo}
-										</p>
-									</div>
-								</div>
-							)}
-						</div>
-					</section>
-
-					<Historial historial={historial} />
 				</div>
 
-				<aside className='space-y-4'>
+				<section
+					aria-label='Visor'
+					className={cn(TARJETA, 'p-2 sm:p-4 lg:col-start-1 lg:row-start-2')}
+				>
+					<div
+						ref={contenedorRef}
+						className='relative flex aspect-4/3 items-center justify-center overflow-hidden rounded-xl bg-stone-900 sm:aspect-video'
+					>
+						{!enSimulacion && fuente === 'camara' ? (
+							<video
+								ref={videoRef}
+								aria-label='Vista de la cámara'
+								className='size-full object-contain'
+								muted
+								playsInline
+								onLoadedMetadata={e =>
+									fijarImagen({
+										w: e.currentTarget.videoWidth,
+										h: e.currentTarget.videoHeight,
+									})
+								}
+							/>
+						) : imagenUrl ? (
+							// eslint-disable-next-line @next/next/no-img-element
+							<img
+								alt={imagenNombre || 'Etiqueta de la caja a verificar'}
+								className='size-full object-contain'
+								src={imagenUrl}
+								onLoad={e =>
+									fijarImagen({
+										w: e.currentTarget.naturalWidth,
+										h: e.currentTarget.naturalHeight,
+									})
+								}
+							/>
+						) : null}
+
+						{!enSimulacion && fuente === 'camara' && estado !== 'activa' && (
+							<p className='absolute px-4 text-center text-sm text-stone-200'>
+								{error ?? 'La cámara está apagada. Pulse “Encender cámara”.'}
+							</p>
+						)}
+						{!imagenUrl && (enSimulacion || fuente === 'imagen') && (
+							<p className='absolute px-4 text-center text-sm text-stone-200'>
+								{enSimulacion
+									? 'Pulse “Iniciar simulación” para ver pasar las cajas.'
+									: 'Elija una imagen o un ejemplo para empezar.'}
+							</p>
+						)}
+
+						{mostrarRecuadros && (
+							<Superposicion
+								area={area}
+								codigos={ultima?.codigos ?? []}
+								veredicto={ultima?.veredicto ?? null}
+							/>
+						)}
+
+						{sim.activa && sim.fase === 'escaneando' && (
+							<div
+								aria-hidden='true'
+								className='escaneo pointer-events-none absolute inset-0'
+							/>
+						)}
+
+						{sim.activa && (
+							<p className='absolute top-3 left-3 rounded-full bg-stone-900/90 px-3 py-1 text-xs font-semibold text-white'>
+								Caja n.º {sim.numero} ·{' '}
+								{sim.paso === 1 ? 'Etiqueta principal' : 'Costado (QR)'}
+							</p>
+						)}
+
+						{sim.activa && sim.fase !== 'resultado' && (
+							<p className='absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-stone-900/90 px-4 py-1.5 text-sm text-white'>
+								{sim.fase === 'llegando' ? 'Llega la caja…' : 'Revisando…'}
+							</p>
+						)}
+
+						{sim.activa && sim.fase === 'resultado' && badge && !cajaFinal && (
+							<p
+								className={cn(
+									'absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-xl px-4 py-1.5 text-base font-black text-white shadow-lg sm:px-5 sm:py-2 sm:text-xl',
+									badge.solido,
+								)}
+							>
+								{ultima && <badge.Icono className='size-6' />}
+								{badge.titulo}
+							</p>
+						)}
+
+						{badgeCaja && (
+							<div className='absolute inset-0 flex items-center justify-center bg-stone-900/65'>
+								<div
+									className={cn(
+										'rounded-2xl px-5 py-4 text-center text-white shadow-2xl sm:px-8 sm:py-5',
+										badgeCaja.solido,
+									)}
+								>
+									<p className='text-sm font-semibold'>Caja n.º {sim.numero}</p>
+									<p className='flex items-center justify-center gap-2 text-2xl font-black sm:text-3xl'>
+										<badgeCaja.Icono className='size-8' />
+										{badgeCaja.titulo}
+									</p>
+								</div>
+							</div>
+						)}
+					</div>
+				</section>
+
+				<aside className='space-y-4 lg:sticky lg:top-4 lg:col-start-2 lg:row-span-3 lg:row-start-1'>
 					<TarjetaResultado ultima={ultima} />
 
 					{sim.totales.total > 0 && (
-						<section className='rounded-xl border border-stone-200 bg-white p-4'>
+						<section className={cn(TARJETA, 'p-4')}>
 							<h2 className='text-base font-semibold'>
 								Cajas de la simulación
 							</h2>
@@ -737,7 +731,7 @@ export default function Home() {
 
 					<Contadores historial={historial} />
 
-					<section className='rounded-xl border border-stone-200 bg-white p-4 text-sm'>
+					<section className={cn(TARJETA, 'p-4 text-sm')}>
 						<h2 className='text-base font-semibold'>
 							¿Qué significa cada resultado?
 						</h2>
@@ -769,6 +763,10 @@ export default function Home() {
 						onCambiar={setPedidoId}
 					/>
 				</aside>
+
+				<div className='lg:col-start-1 lg:row-start-3'>
+					<Historial historial={historial} />
+				</div>
 			</main>
 		</div>
 	);

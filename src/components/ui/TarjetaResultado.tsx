@@ -40,8 +40,14 @@ export function TarjetaResultado({ ultima }: { ultima: Verificacion | null }) {
 
 	return (
 		<div
+			key={ultima.id}
 			aria-live='polite'
-			className={cn('rounded-xl border-2 p-5', e.borde, e.fondo, e.texto)}
+			className={cn(
+				'aparece rounded-2xl border-2 p-5',
+				e.borde,
+				e.fondo,
+				e.texto,
+			)}
 			role='status'
 		>
 			<p className='text-sm font-medium opacity-80'>{cara}</p>

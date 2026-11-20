@@ -15,7 +15,7 @@ export function Pasos({ actual }: { actual: 1 | 2 | 3 | null }) {
 						key={nombre}
 						aria-current={activo ? 'step' : undefined}
 						className={cn(
-							'flex items-center gap-2 rounded-lg border px-3 py-2 text-sm',
+							'flex min-w-0 flex-col items-center gap-1 rounded-lg border p-2 text-center text-xs sm:flex-row sm:gap-2 sm:px-3 sm:text-left sm:text-sm',
 							activo &&
 								'border-pedregal bg-red-50 font-semibold text-stone-900',
 							hecho && 'border-emerald-600 bg-emerald-50 text-emerald-900',
