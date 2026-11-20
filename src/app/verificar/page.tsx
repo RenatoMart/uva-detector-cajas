@@ -351,7 +351,7 @@ export default function Home() {
 						{servicio === undefined
 							? 'Conectando…'
 							: conectado
-								? `Detector ${detectorRemoto ? 'conectado' : 'integrado'} · modo ${servicio}`
+								? `Detector ${detectorRemoto ? 'conectado' : 'integrado'}`
 								: 'Detector sin conexión'}
 					</p>
 				</div>
