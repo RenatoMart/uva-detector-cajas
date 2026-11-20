@@ -81,12 +81,9 @@ def salud() -> dict:
     return {'ok': True, 'modo': MODO}
 
 
-@app.post('/detectar')
-async def detectar(imagen: UploadFile = File(...)) -> dict:
-    t0 = time.perf_counter()
-    img = Image.open(io.BytesIO(await imagen.read())).convert('RGB')
+def analizar(img: Image.Image) -> dict:
+    """Lee y clasifica los códigos de una imagen (sin la parte web)."""
     w, h = img.size
-
     codigos: list[dict] = []
     for b in zxingcpp.read_barcodes(img):
         p = b.position
@@ -101,10 +98,15 @@ async def detectar(imagen: UploadFile = File(...)) -> dict:
                 'caja': normalizar(x0, y0, x1, y1, w, h),
             }
         )
+    return {'codigos': codigos, 'etiqueta': localizar_etiqueta(img)}
 
+
+@app.post('/detectar')
+async def detectar(imagen: UploadFile = File(...)) -> dict:
+    t0 = time.perf_counter()
+    img = Image.open(io.BytesIO(await imagen.read())).convert('RGB')
     return {
-        'codigos': codigos,
-        'etiqueta': localizar_etiqueta(img),
+        **analizar(img),
         'ms': round((time.perf_counter() - t0) * 1000),
         'modo': MODO,
     }
