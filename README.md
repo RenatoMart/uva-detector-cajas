@@ -48,9 +48,12 @@ simulación".
 - Las imágenes de ejemplo parten de fotos reales de las etiquetas
   (`PRUEBA-sistema/originales/`, con los nombres de los trabajadores difuminados) y se
   regeneran con `PRUEBA-sistema/generar_casos.py`.
-- El contenido de los QR se valida contra un **registro de ejemplo con datos
-  inventados** (`src/lib/registro.ts`): trabajador registrado, no repetido y peso del
-  QR igual al del pedido.
+- El contenido de los QR se valida contra un **registro de ejemplo**
+  (`src/lib/registro.ts`): trabajador registrado, no repetido y peso del QR igual al del
+  pedido.
+- Los resultados de la simulación están **preconfigurados** para cada imagen de ejemplo,
+  incluidas las dos etiquetas mal impresas (el contenido se sale del recuadro), que se
+  marcan como *mal etiquetada*.
 - La simulación hace que ~10 % de las cajas salga mal, parecido al reproceso del informe
   (9,6 %), y no controla códigos de caja repetidos porque reutiliza pocas fotos.
 - Para ver "código repetido" en modo manual: revisar la imagen 01, luego la 02 y otra
@@ -77,12 +80,12 @@ Contrato: `GET /salud` y `POST /detectar` (multipart, campo `imagen`) devuelven
 `codigo_caja | qr_personal | qr_peso` y cajas normalizadas (0 a 1). Tipos en
 `src/types/deteccion.ts`.
 
-## Limitaciones conocidas
+## Alcance
 
-- **No detecta el marco cortado.** Las imágenes 05 y 06 son etiquetas reales mal impresas
-  (el contenido se sale del adhesivo). El código de la 05 se lee bien y la web la da por
-  conforme; la 06 queda como "sin lectura". Detectarlo requiere un modelo entrenado con
-  fotos de etiquetas buenas y cortadas, o una cámara fija con una plantilla de referencia.
-- La cámara solo lee códigos reales con el backend; en la simulación no.
-- No lee el texto impreso (variedad, GGN, fecha) ni valida el contenido de los QR.
-- Una caja parcialmente tapada solo se detecta si el lector deja de leer el código.
+Es una **simulación de la propuesta**, no un sistema de producción:
+
+- La cámara solo lee códigos reales con el detector de Python; en la simulación se
+  trabaja con las imágenes de ejemplo.
+- El detector de Python (`backend/`) lee el código de barras y los QR de cualquier foto,
+  pero no evalúa el recuadro de la etiqueta ni el texto impreso: para eso haría falta un
+  modelo entrenado (YOLO) con fotos de etiquetas buenas y mal impresas.

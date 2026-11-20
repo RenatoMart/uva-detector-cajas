@@ -1,10 +1,10 @@
 /**
- * REGISTRO DE EJEMPLO (datos inventados para la simulación).
+ * REGISTRO DE EJEMPLO para la simulación.
  *
  * Los códigos de los QR sí son los leídos en las fotos reales, pero qué significan lo
  * sabe el sistema de trazabilidad de la empresa. Aquí se asume que cada QR de personal
  * identifica a un trabajador y su acción, y que el QR rosado identifica el tipo de cartón.
- * Los nombres son ficticios. Reemplazar por la consulta real cuando la empresa la permita.
+ * Los nombres son de ejemplo. Reemplazar por la consulta real cuando la empresa la permita.
  */
 
 export interface Trabajador {
