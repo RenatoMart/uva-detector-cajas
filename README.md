@@ -23,50 +23,54 @@ acción) y 1 QR rosado de peso. La web revisa cada cara por separado:
 
 Resultados: **conforme**, **no conforme** (con motivo) o **sin lectura** (revisar a mano).
 
-## Contrato del servicio de lectura
+## Cómo funciona (simulación integrada)
 
-- `GET  {NEXT_PUBLIC_DETECTOR_URL}/salud` → 200 si está disponible.
-- `POST {NEXT_PUBLIC_DETECTOR_URL}/detectar` (multipart, campo `imagen`) → JSON:
-
-```json
-{
-  "codigos": [
-    { "tipo": "codigo_caja", "texto": "BAC7317469210284",
-      "caja": { "x": 0.29, "y": 0.49, "w": 0.29, "h": 0.08 } }
-  ],
-  "etiqueta": { "x": 0.24, "y": 0.18, "w": 0.53, "h": 0.59 },
-  "ms": 85,
-  "modo": "simulado"
-}
-```
-
-`tipo`: `codigo_caja` | `qr_personal` | `qr_peso`. Cajas normalizadas (0 a 1). Tipos en
-`src/types/deteccion.ts`.
-
-## Simulación (sin YOLO entrenado)
+La web **no necesita servidor**: reconoce las imágenes de ejemplo por su huella
+(SHA-256) y devuelve resultados precalculados con el lector real
+(`src/lib/resultados-simulacion.json`). Por eso funciona tal cual en **Vercel**.
 
 ```bash
-# 1) Backend (puerto 8000)
+npm install
+npm run dev      # http://localhost:3000  ->  Iniciar -> SIMULACIÓN
+```
+
+En la web: pulsar **Iniciar simulación** para ver pasar cajas una tras otra (primero la
+etiqueta principal y luego el costado; la cara se reconoce sola y se muestra *buena
+etiqueta*, *mal etiquetada* o *sin lectura*). También se puede **Revisar una caja** con
+las imágenes de ejemplo. Una imagen que no sea de ejemplo se informa como "fuera de la
+simulación".
+
+- Las imágenes de ejemplo parten de fotos reales de las etiquetas
+  (`PRUEBA-sistema/originales/`, con los nombres de los trabajadores difuminados) y se
+  regeneran con `PRUEBA-sistema/generar_casos.py`.
+- El contenido de los QR se valida contra un **registro de ejemplo con datos
+  inventados** (`src/lib/registro.ts`): trabajador registrado, no repetido y peso del
+  QR igual al del pedido.
+- La simulación hace que ~10 % de las cajas salga mal, parecido al reproceso del informe
+  (9,6 %), y no controla códigos de caja repetidos porque reutiliza pocas fotos.
+- Para ver "código repetido" en modo manual: revisar la imagen 01, luego la 02 y otra
+  vez la 01.
+
+## Detector real (opcional, backend de Python)
+
+`backend/` lee de verdad los códigos de cualquier foto (zxing-cpp + OpenCV). **No usa
+YOLO**; `localizar_etiqueta` es donde se conectaría un modelo entrenado.
+
+```bash
 python3 -m venv backend/.venv
 backend/.venv/bin/pip install -r backend/requirements.txt
 cd backend && .venv/bin/uvicorn main:app --port 8000
-
-# 2) Web (otra terminal; .env.local apunta a http://localhost:8000)
-npm run dev
+echo 'NEXT_PUBLIC_DETECTOR_URL=http://localhost:8000' > .env.local
 ```
 
-En la web: pulsar **▶ SIMULACIÓN** para ver pasar cajas una tras otra (primero la etiqueta
-principal y luego el costado; la cara se reconoce sola y se muestra *buena etiqueta*,
-*mal etiquetada* o *sin lectura*). También se puede **Subir imagen** y pulsar una
-**imagen de prueba**; "Cara a revisar" en *Automática* la identifica por los códigos. Las imágenes
-parten de fotos reales de las etiquetas (`PRUEBA-sistema/originales/`, con los nombres de
-los trabajadores difuminados) y se regeneran con `PRUEBA-sistema/generar_casos.py`.
+Con esa variable la web usa el backend en lugar de la simulación. Tras regenerar las
+imágenes de ejemplo hay que recalcular el JSON:
+`backend/.venv/bin/python backend/generar_resultados.py`.
 
-- `backend/main.py` lee los códigos con zxing-cpp y los clasifica (QR rosado = peso).
-  **No usa YOLO**; `localizar_etiqueta` es donde se conectaría el modelo entrenado.
-- La simulación usa pesos para que ~10 % de las cajas salga mal (como el reproceso del
-  informe) y no controla repetidos porque reutiliza pocas fotos.
-- Para ver "código repetido": verificar la imagen 01, luego la 02 y otra vez la 01.
+Contrato: `GET /salud` y `POST /detectar` (multipart, campo `imagen`) devuelven
+`{ codigos: [{ tipo, texto, caja }], etiqueta, ms, modo }`, con `tipo` en
+`codigo_caja | qr_personal | qr_peso` y cajas normalizadas (0 a 1). Tipos en
+`src/types/deteccion.ts`.
 
 ## Limitaciones conocidas
 
@@ -74,5 +78,6 @@ los trabajadores difuminados) y se regeneran con `PRUEBA-sistema/generar_casos.p
   (el contenido se sale del adhesivo). El código de la 05 se lee bien y la web la da por
   conforme; la 06 queda como "sin lectura". Detectarlo requiere un modelo entrenado con
   fotos de etiquetas buenas y cortadas, o una cámara fija con una plantilla de referencia.
+- La cámara solo lee códigos reales con el backend; en la simulación no.
 - No lee el texto impreso (variedad, GGN, fecha) ni valida el contenido de los QR.
 - Una caja parcialmente tapada solo se detecta si el lector deja de leer el código.
